@@ -1,0 +1,102 @@
+Problem Setting: A server can service file upload and download requests as before, but from multiple clients. 
+
+Specifications: Use fork() system call to handle multiple requests: the server process delegates a request to a child process and goes back to listening for new requests.
+
+Sample execution use cases:
+
+Case A: If Client-1 wishes to upload file Lecture1.pptx and Client-2 wishes to upload Lecture3.pptx. The server will store Lecture1.pptx as  "Client1-File-1" and Lecture 3.pptx as "Client2-File-1". 
+
+Case B: If Client-1 wishes to upload Lecture1.pptx and Lecture3.pptx, they may be stored as "Client1-File-1" and "Client1-File-2".
+
+The naming of files on server is up to you and there is no restriction except that all uploaded files (including identical file uploads) must be stored by the server with a unique file name.
+
+Programming guidelines
+
+1. The server should create a child process with the fork() system call.
+
+The return value of the fork system call should be used a condition to separate execution of child and parent process. If you are not careful with this part, you could end up creating infinite number of processes thereby, crashing/hanging up your PC.
+
+....use the following code snippet as template (also from your own OS code)....
+
+pid_t childpid;
+
+childpid=fork();
+
+if(childpid==0){
+/*This is child process*/
+
+}
+else
+{
+/*This is parent process*/
+/*childpid value is equal to the PID of the child process in this part*/
+
+}
+
+--------------------------------------------------------
+
+
+Note: The wait() system call can be used to wait for the termination of any child process. However, note that, calling wait will suspend the parent process and that means that it won't be able to listen for any incoming connections till the previous child process is terminated. So use with caution and only if necessary.
+
+2. The server gets a connection request from a client. Creates a child process to handle the request and returns to listening mode (in the infinite loop). 
+
+/****-----General server template-----****/
+/***Not exact code--only pseudo code***/
+
+pid_t pid;
+int listenfd, connfd;
+
+listenfd=socket(...);
+bind(listenfd,..);
+
+
+for(;;){
+
+connfd=accept(listenfd,...);
+
+if((pid=fork())==0)
+{
+
+close(listenfd) /*inside child*/
+dorequeset(connfd)
+close(connfd)
+exit(0); /*child terminates*/
+}
+else
+{
+close(connfd); /*main server closes this reference*/
+/*goes back to listening for new requests*/
+
+}
+
+
+3. There should be signal handler for handling the SIGCHLD from any child process. The template and the necessary code is provided to you along with this project. This doesn't really add to the complexity/correctness of the program, but will prevent unwanted crashes of the server program.
+
+Notes:
+
+1. In addition to the existing files. You may need the following header files:
+#include<sys/wait.h>
+
+2. All error scenarios should be handled gracefull. If a program crashes during testing, it will be penalized.
+
+http://man7.org/linux/man-pages/man3/errno.3.html
+
+
+<errno.h> describes a global variable "errno". This value is set by a system call or user function when an error occurs. Several errors are described (see the man page) sybolically, e.g., EACCES is an error that means "Permission Denied" error was returned by the calling process. In this case, errno will be equal to EACCES.
+The list of errors returned by a calling process are given in the man page for that system call. If the system call returns no error, then errno will be an undefined or unknown state.  Check for the system call's success return codes in such cases.
+
+3. Printing the error conditions using perror() and strerror() system calls:
+
+http://man7.org/linux/man-pages/man3/perror.3.html
+http://man7.org/linux/man-pages/man3/strerror.3.html
+
+To print out error conditions you can perror() as follows:
+perror(strerror(errno));
+
+strerror() system call retrieves the description of the error and perror() prints that description.
+
+4. Debugging C programs can be notoriously difficult. Make sure to check the man pages for the system calls for proper usage and use the perror/errno to check for specific error conditions. This will help to debug the problematic code very quickly.
+
+5. You don't have to use threads for this project.
+
+ 

@@ -1,0 +1,9 @@
+Task: Generate a NxN matrix of bits, i.e., 0s and 1s only,  at the client. The client transmits this matrix to the server.
+Before transmission, the client may induce a 1-bit error in the data at random.  A 1-bit error means 1 is changed to 0 or 0 is changed to 1.
+
+Programming Tasks
+1. Design and execute a program to detect all such 1-bit errors
+2. Design an error correcting code so that the server can correct the 1 bit error.
+3. All code to be done in C: use the sample client and server files as base.
+
+

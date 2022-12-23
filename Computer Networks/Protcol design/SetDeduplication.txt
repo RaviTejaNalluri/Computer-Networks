@@ -1,0 +1,21 @@
+Specification 1 : Client-Server Set Deduplication/Intersection
+
+Extend the code from the previous task to allow the server to provide an
+additional service called "Set Intersection". This is defined as follows:
+
+1. Both client and server generate numbers within a common range.
+The size of the lists is same for Specification 1.
+2. The client sends her list to the server.
+3. The server computes the intersection and sends back the output.
+
+To note: The client needs to indicate the type of service required (Deduplication/Intersection). The server should handle the request appropriately.
+
+
+Specification 2:  Memory management
+
+Specification 2.1: 
+Repeat the above where the client generates a list of unknown (i.e., unknown to the server in advance or not a mutually agreed service) size.
+The server needs to be able to handle such cases.
+
+Specification 2.2* (Bonus marks):
+Repeat specification 2.2 for peer-to-peer interaction, i.e., select your neighbors machine to provide the service for you. One neighbor is client and other is server. 

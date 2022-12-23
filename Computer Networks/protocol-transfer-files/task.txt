@@ -1,0 +1,68 @@
+Specifications
+
+Problem Setting: Two network clients listening for requests waiting to share files.
+Approach to be used: Design an application layer protocol like FTP/HTTP to enable this
+
+Goals: To enable two clients to:
+-Know list of files on each other's machines in designated shared folders
+-Upload a file to each other
+-Download a file to each other
+-Periodically check for changes in the shared folder
+-Appropriate signals should be handled 
+
+*Bonus credit
+-Application level error checking using MD5 checksum
+-Enable both TCP and UDP based transport of files as per client requests
+
+Specifications:
+
+The file sharing protocol should implement the following features:
+
+1. Each client takes user input before processing each request. Only request is processed at each time. The clients should report the success/failure of the requests.  This includes invalid user inputs, 
+invalid file names, and socket failures. Handling signal related failures will give bonus points.
+
+Use fgets to read from user input (fputs for output if required)
+
+
+2. An "IndexGet" request which can request different styles of the same index of the shared folder on the other client as listed below. The history of requests made by either clients should be maintained at each of the clients respectively.
+
+a. A "ShortList" request indicating that the requesting client wants to know only the names files chosen from the time-stamps specified by the requesting client, i.e., the client only wishes to learn about a few files.
+
+E.g., Sample request: IndexGet<space>ShortList<space>starting-time-stamp<space>ending-time-stamp<CRLF/EOL> (Hint: you can use "ls -al filename", to get such information)
+
+The response should include the "names", "sizes", "last modified" time-stamp and "type" of files (if available)
+
+b. A "LongList" request indicating that the requesting client wants to know the entire listing of the directory of the shared folder  including the "names", "sizes", "last modified timestamp" and "type"(if available)
+
+E.g., is similar to above with necessary changes.
+
+c. A "RegEx" request indicating that the requesting client wants to know the list of files that contain the regular expression pattern in their file names. The response should include all the file names which "contain" the regular expression pattern in their names, the sizes of the files and "type" (if available).
+
+E.g., IndexGet<space>RegEx<space>"*mp3"<CRLF/EOL>
+
+3. A "FileHash" request indicates that the client to enable the client to check if any file's content has changed. Two types of "FileHash" should be supported:
+
+a. A "Verify" request which gives the name of the file that the client wants the hash for. The response should contain the MD5 hash of the file and the name of the file and last modified time stamp.
+
+E.g., FileHash<space>Verify<space>Name-of-file<CRLF/EOL>
+
+c. A "FileDownload" request, which includes the name of the file that the client wants to download. The response can also include the File, the file name, the file size, the MD5 hash and the time-stamp when the file was last modified. 
+
+E.g., FileDownload<space>Name-of-file<CRLF/EOL>
+
+d. A "FileUpload" request, which includes the name and size of the file that the client wants to  upload. The other client can either send  a "FileUpload Deny" or "FileUpload Allow"  response. The other client should use the file size parameter to make this decision. For example, files greater than 1 MB are not allowed to be uploaded. The client should upload the file, its md5 hash and the time-stamp if it  receives a "FileUpload Allow" response. If it gets a "FileUpload Deny" then the client should go back to listening for other requests. 
+
+E.g., FileUpload<space>Name-of-file<CRLF/EOL>
+
+Important Notes
+
+1. Programming language is C. 
+
+2. All error scenarios should be handled graceful. If a program crashes during testing, it will be penalized.
+
+3. We have given only examples of the "Request" messages. You must design appropriate "Response" messages with proper headers. 
+
+4. You don't have to use threads for this project.
+
+5. Plagiarism in any form will not be tolerated.
+

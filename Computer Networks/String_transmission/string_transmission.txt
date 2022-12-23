@@ -1,0 +1,4 @@
+Specification 1: Reuse the previous lab code.
+Specification 2: Recover from the error.
+
+Problem input: Assume that you have a set of strings where the maximum length of any string is 10 characters. You can transmit a limited number of strings per transmission. There is likely to be 1-bit (one bit) error in each such transmission.  Design and implement a scheme to recover the damaged string in each transmission.
